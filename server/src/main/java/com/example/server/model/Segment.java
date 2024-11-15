@@ -4,11 +4,9 @@
  */
 package com.example.server.model;
 
-import com.example.server.mapper.SafeDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  *
@@ -20,16 +18,12 @@ public class Segment {
     public Segment() {
     }
 
-    @JsonDeserialize(using = SafeDeserializer.class)
     private Arrival departure;
-
-    @JsonDeserialize(using = SafeDeserializer.class)
     private Arrival arrival;
     private String carrierCode;
     private String number;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private String aircraft;
-    @JsonDeserialize(using = SafeDeserializer.class)
     private String operating;
     private String duration;
     private String id;
@@ -56,8 +50,8 @@ public class Segment {
 
     @JsonSetter("operating")  // Se asignará a este setter cuando el campo "aircraft" esté presente en el JSON
     public void setOperating(JsonNode node) {
-        if (node != null && node.has("code")) {
-            this.aircraft = node.get("code").asText();  // Extraemos "code" dentro de "aircraft" y lo asignamos a aircraft
+        if (node != null && node.has("carrierCode")) {
+            this.operating = node.get("carrierCode").asText();  // Extraemos "code" dentro de "aircraft" y lo asignamos a aircraft
         }
     }
 

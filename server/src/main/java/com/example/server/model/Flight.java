@@ -19,11 +19,11 @@ public class Flight {
     }
 
     private String id;
-    //@JsonDeserialize(using = SafeDeserializer.class)
+
     private Price price;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private Itinerary[] itineraries;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private TravelerPricing[] travelerPricings;
 
     public Flight(String id, Itinerary[] itineraries, Price price, TravelerPricing[] travelerPricings) {

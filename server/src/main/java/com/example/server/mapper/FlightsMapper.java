@@ -8,11 +8,10 @@ package com.example.server.mapper;
  *
  * @author luis.renteria
  */
-import com.example.server.model.Fee;
+import com.example.server.model.Dictionaries;
 import com.example.server.model.Flight;
 import com.example.server.model.FlightsDTO;
 import com.example.server.model.Itinerary;
-import com.example.server.model.Price;
 import com.example.server.model.Segment;
 import com.example.server.model.TravelerPricing;
 import com.example.server.model.TravelerPricingPrice;
@@ -22,7 +21,7 @@ import java.util.List;
 
 public class FlightsMapper {
 
-    public static List<FlightsDTO> transformFlightsToDTO(Flight[] flights) {
+    public static List<FlightsDTO> transformFlightsToDTO(Flight[] flights, Dictionaries myDict) {
         List<FlightsDTO> flightDTOs = new ArrayList<>();
 
         // Iterar sobre el arreglo de vuelos
@@ -50,14 +49,16 @@ public class FlightsMapper {
             flightDTO.setArrivalAirportCode(lastSegment.getArrival().getIataCode());
 
             // Aerolínea principal y operativa
-            flightDTO.setAirlineName(firstSegment.getCarrierCode()); // O la aerolínea de algún atributo que tengas
+            flightDTO.setAirlineName( DictionariesMapper.getCarrierName(myDict, firstSegment.getCarrierCode())); // O la aerolínea de algún atributo que tengas
             flightDTO.setAirlineCode(firstSegment.getCarrierCode());
 
             // Si la aerolínea operativa es diferente, la incluimos
             if (!firstSegment.getCarrierCode().equals(firstSegment.getOperating())) {
-                flightDTO.setOperatingAirlineName(firstSegment.getOperating()); // O alguna lógica para obtener el nombre
+                flightDTO.setOperatingAirlineName( DictionariesMapper.getCarrierName(myDict, firstSegment.getOperating())); // O alguna lógica para obtener el nombre
                 flightDTO.setOperatingAirlineCode(firstSegment.getOperating());
             }
+            
+           
 
             // Duración del vuelo
             flightDTO.setDuration(firstItinerary.getDuration());  // Asumiendo que la duración se encuentra aquí
@@ -71,6 +72,8 @@ public class FlightsMapper {
             // Establecer segmentos del vuelo
             List<Segment> segments = new ArrayList<>();
             for (Segment segment : firstItinerary.getSegments()) {
+                String aircraftName=DictionariesMapper.getAircraftName(myDict, segment.getAircraft());
+                segment.setAircraft(aircraftName);
                 segments.add(segment);
             }
             flightDTO.setSegments(segments);
@@ -99,6 +102,8 @@ public class FlightsMapper {
 //                }
 //                priceDTO.setFees(feeDTOs);
                 travelerPricingDTO.setPrice(priceDTO);
+                
+                travelerPricingDTO.setFareDetailsBySegment(travelerPricing.getFareDetailsBySegment());
 
                 travelerPricingDTOs.add(travelerPricingDTO);
             }

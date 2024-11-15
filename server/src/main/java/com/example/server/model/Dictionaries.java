@@ -49,4 +49,9 @@ public class Dictionaries {
         this.carriers = carriers;
     }
 
+    @Override
+    public String toString() {
+        return "Dictionaries{" + "locations=" + locations + ", aircrafts=" + aircrafts + ", carriers=" + carriers + '}';
+    }
+
 }

@@ -6,21 +6,21 @@ package com.example.server.service;
 
 import com.example.server.api.AuthenticationService;
 import com.example.server.api.AmadeusApiClient;
+import com.example.server.mapper.DictionariesMapper;
 import com.example.server.mapper.FlightsMapper;
 import com.example.server.mapper.LocationsMapper;
-import com.example.server.mapper.TreePrinter;
+import com.example.server.model.Dictionaries;
 import com.example.server.model.Flight;
 import com.example.server.model.FlightsDTO;
 import com.example.server.model.Location;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.*;
-import static org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties.UiService.LOGGER;
 import org.springframework.stereotype.Service;
 
 /**
@@ -59,19 +59,29 @@ public class AppService {
         String url = amadeusApiClient.buildFlightSearchUrl(departureAitaCode, arrivalAitaCode, departureDate, arrivalDate, returnDate, numberAdults, currencyCode, nonStop, sortByPrice, sortByDate);
         JsonNode jsonResponse = amadeusApiClient.request(accessToken, url);
 
+        
+        
+        JsonNode dicts = jsonResponse.get("dictionaries");
+        Dictionaries myDict = new Dictionaries();
+        
+        if (!dicts.isNull() && !dicts.isEmpty()) {
+            myDict=DictionariesMapper.convert(dicts);
+        }
+        
         // Crear un ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
-
-        // Deserializar el JSON a la clase Flight
+        objectMapper.registerModule(new Jdk8Module());
         String node = jsonResponse.get("data").toString();
+        
 
         if (!node.isEmpty()) {
             try {
                 Flight[] myFlights = objectMapper.readValue(node, Flight[].class);
-                
-                System.out.println(myFlights[0].toString());
+                for (Flight f : myFlights) {
+                    System.out.println(f.toString());
+                }
 
-                return FlightsMapper.transformFlightsToDTO(myFlights);
+                return FlightsMapper.transformFlightsToDTO(myFlights,myDict);
 
             } catch (JsonProcessingException ex) {
                 Logger.getLogger(AppService.class.getName()).log(Level.SEVERE, null, ex);

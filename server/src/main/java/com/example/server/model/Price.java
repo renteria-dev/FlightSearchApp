@@ -22,10 +22,10 @@ public class Price {
     private String currency;
     private String total;
     private String base;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private Fee[] fees;
     private String grandTotal;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private Optional<Fee[]> additionalServices;
 
     public Price(String currency, String total, String base, Fee[] fees, String grandTotal, Optional<Fee[]> additionalServices) {

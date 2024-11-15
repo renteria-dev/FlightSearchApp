@@ -4,9 +4,7 @@
  */
 package com.example.server.model;
 
-import com.example.server.mapper.SafeDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  *
@@ -19,7 +17,7 @@ public class Itinerary {
     }
 
     private String duration;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private Segment[] segments;
 
     public Itinerary(String duration, Segment[] segments) {

@@ -5,7 +5,6 @@
 package com.example.server.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.OffsetDateTime;
 
 /**
  *
@@ -14,14 +13,14 @@ import java.time.OffsetDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Arrival {
 
-    private String iataCode;
-    private String terminal;
-
     public Arrival() {
     }
-    private OffsetDateTime at;
 
-    public Arrival(String iataCode, String terminal, OffsetDateTime at) {
+    private String iataCode;
+    private String terminal;
+    private String at;
+
+    public Arrival(String iataCode, String terminal, String at) {
         this.iataCode = iataCode;
         this.terminal = terminal;
         this.at = at;
@@ -43,11 +42,11 @@ public class Arrival {
         this.terminal = terminal;
     }
 
-    public OffsetDateTime getAt() {
+    public String getAt() {
         return at;
     }
 
-    public void setAt(OffsetDateTime at) {
+    public void setAt(String at) {
         this.at = at;
     }
 

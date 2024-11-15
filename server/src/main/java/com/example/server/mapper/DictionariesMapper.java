@@ -22,7 +22,7 @@ public class DictionariesMapper {
         Dictionaries dictionaries = new Dictionaries();
 
         // Extraer el nodo "dictionaries" del JSON
-        JsonNode dictionariesNode = jsonData.get("dictionaries");
+        JsonNode dictionariesNode = jsonData;
 
         if (dictionariesNode != null) {
             // Procesar el mapa de "locations"

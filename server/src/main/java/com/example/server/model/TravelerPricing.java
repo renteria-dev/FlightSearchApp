@@ -23,9 +23,9 @@ public class TravelerPricing {
     private String travelerID;
     private String fareOption;
     private String travelerType;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private TravelerPricingPrice price;
-    @JsonDeserialize(using = SafeDeserializer.class)
+
     private FareDetailsBySegment[] fareDetailsBySegment;
 
     public TravelerPricing(String travelerID, String fareOption, String travelerType, TravelerPricingPrice price, FareDetailsBySegment[] fareDetailsBySegment) {

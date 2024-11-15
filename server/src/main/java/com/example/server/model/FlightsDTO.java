@@ -14,8 +14,8 @@ import java.util.List;
 public class FlightsDTO {
 
     private String flightId;
-    private OffsetDateTime departureTime;
-    private OffsetDateTime arrivalTime;
+    private String departureTime;
+    private String arrivalTime;
     private String departureAirportName;
     private String departureAirportCode;
     private String arrivalAirportName;
@@ -30,7 +30,7 @@ public class FlightsDTO {
     private List<Segment> segments;
     private List<TravelerPricing> travelerPricings;
 
-    public FlightsDTO(String flightId, OffsetDateTime departureTime, OffsetDateTime arrivalTime, String departureAirportName, String departureAirportCode, String arrivalAirportName, String arrivalAirportCode, String airlineName, String airlineCode, String operatingAirlineName, String operatingAirlineCode, String duration, String totalPrice, boolean hasStops, List<Segment> segments, List<TravelerPricing> travelerPricings) {
+    public FlightsDTO(String flightId, String departureTime, String arrivalTime, String departureAirportName, String departureAirportCode, String arrivalAirportName, String arrivalAirportCode, String airlineName, String airlineCode, String operatingAirlineName, String operatingAirlineCode, String duration, String totalPrice, boolean hasStops, List<Segment> segments, List<TravelerPricing> travelerPricings) {
         this.flightId = flightId;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -60,19 +60,19 @@ public class FlightsDTO {
         this.flightId = flightId;
     }
 
-    public OffsetDateTime getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(OffsetDateTime departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public OffsetDateTime getArrivalTime() {
+    public String getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(OffsetDateTime arrivalTime) {
+    public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
