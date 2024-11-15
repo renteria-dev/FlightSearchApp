@@ -4,27 +4,26 @@
  */
 package com.example.server.model;
 
+import com.example.server.mapper.SafeDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  *
  * @author luis.renteria
  */
-import java.util.List;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Itinerary {
 
-    private List<Segment> segments;
+    public Itinerary() {
+    }
+
     private String duration;
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private Segment[] segments;
 
-    public Itinerary(List<Segment> segments, String duration) {
-        this.segments = segments;
+    public Itinerary(String duration, Segment[] segments) {
         this.duration = duration;
-    }
-
-    public List<Segment> getSegments() {
-        return segments;
-    }
-
-    public void setSegments(List<Segment> segments) {
         this.segments = segments;
     }
 
@@ -34,6 +33,19 @@ public class Itinerary {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public Segment[] getSegments() {
+        return segments;
+    }
+
+    public void setSegments(Segment[] segments) {
+        this.segments = segments;
+    }
+
+    @Override
+    public String toString() {
+        return "Itinerary{" + "duration=" + duration + ", segments=" + segments + '}';
     }
 
 }

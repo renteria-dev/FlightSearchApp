@@ -4,46 +4,81 @@
  */
 package com.example.server.model;
 
+import com.example.server.mapper.SafeDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  *
  * @author luis.renteria
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TravelerPricing {
 
-    private String travelerId;
-    private Price price;
-    private FareDetailsBySegment fareDetailsBySegment;
+    public TravelerPricing() {
+    }
 
-    public TravelerPricing(String travelerId, Price price, FareDetailsBySegment fareDetailsBySegment) {
-        this.travelerId = travelerId;
+    @JsonProperty("travelerId")
+    private String travelerID;
+    private String fareOption;
+    private String travelerType;
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private TravelerPricingPrice price;
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private FareDetailsBySegment[] fareDetailsBySegment;
+
+    public TravelerPricing(String travelerID, String fareOption, String travelerType, TravelerPricingPrice price, FareDetailsBySegment[] fareDetailsBySegment) {
+        this.travelerID = travelerID;
+        this.fareOption = fareOption;
+        this.travelerType = travelerType;
         this.price = price;
         this.fareDetailsBySegment = fareDetailsBySegment;
     }
 
-    public String getTravelerId() {
-        return travelerId;
+    public String getTravelerID() {
+        return travelerID;
     }
 
-    public void setTravelerId(String travelerId) {
-        this.travelerId = travelerId;
+    public void setTravelerID(String travelerID) {
+        this.travelerID = travelerID;
     }
 
-    public Price getPrice() {
+    public String getFareOption() {
+        return fareOption;
+    }
+
+    public void setFareOption(String fareOption) {
+        this.fareOption = fareOption;
+    }
+
+    public String getTravelerType() {
+        return travelerType;
+    }
+
+    public void setTravelerType(String travelerType) {
+        this.travelerType = travelerType;
+    }
+
+    public TravelerPricingPrice getPrice() {
         return price;
     }
 
-    public void setPrice(Price price) {
+    public void setPrice(TravelerPricingPrice price) {
         this.price = price;
     }
 
-    public FareDetailsBySegment getFareDetailsBySegment() {
+    public FareDetailsBySegment[] getFareDetailsBySegment() {
         return fareDetailsBySegment;
     }
 
-    public void setFareDetailsBySegment(FareDetailsBySegment fareDetailsBySegment) {
+    public void setFareDetailsBySegment(FareDetailsBySegment[] fareDetailsBySegment) {
         this.fareDetailsBySegment = fareDetailsBySegment;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "TravelerPricing{" + "travelerID=" + travelerID + ", fareOption=" + fareOption + ", travelerType=" + travelerType + ", price=" + price + ", fareDetailsBySegment=" + fareDetailsBySegment + '}';
+    }
 
 }

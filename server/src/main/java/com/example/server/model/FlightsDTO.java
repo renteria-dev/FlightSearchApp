@@ -4,6 +4,7 @@
  */
 package com.example.server.model;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -12,82 +13,99 @@ import java.util.List;
  */
 public class FlightsDTO {
 
-    private String departureTime;
-    private String arrivalTime;
-
-    private String departureAirport;
-    private String arrivalAirport;
-
-    private String airlineCode;
+    private String flightId;
+    private OffsetDateTime departureTime;
+    private OffsetDateTime arrivalTime;
+    private String departureAirportName;
+    private String departureAirportCode;
+    private String arrivalAirportName;
+    private String arrivalAirportCode;
     private String airlineName;
-
-    private String operatingAirlineCode;
+    private String airlineCode;
     private String operatingAirlineName;
-
-    private String pricePerTraveler;
-    private List<Segment> segments;
-
-    private String totalFlightDuration;
+    private String operatingAirlineCode;
+    private String duration;
     private String totalPrice;
+    private boolean hasStops;
+    private List<Segment> segments;
+    private List<TravelerPricing> travelerPricings;
 
-    public FlightsDTO(String departureTime, String arrivalTime, String departureAirport, String arrivalAirport, String airlineCode, String airlineName, String operatingAirlineCode, String operatingAirlineName, String pricePerTraveler, List<Segment> segments, String totalFlightDuration, String totalPrice) {
+    public FlightsDTO(String flightId, OffsetDateTime departureTime, OffsetDateTime arrivalTime, String departureAirportName, String departureAirportCode, String arrivalAirportName, String arrivalAirportCode, String airlineName, String airlineCode, String operatingAirlineName, String operatingAirlineCode, String duration, String totalPrice, boolean hasStops, List<Segment> segments, List<TravelerPricing> travelerPricings) {
+        this.flightId = flightId;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-        this.departureAirport = departureAirport;
-        this.arrivalAirport = arrivalAirport;
-        this.airlineCode = airlineCode;
+        this.departureAirportName = departureAirportName;
+        this.departureAirportCode = departureAirportCode;
+        this.arrivalAirportName = arrivalAirportName;
+        this.arrivalAirportCode = arrivalAirportCode;
         this.airlineName = airlineName;
-        this.operatingAirlineCode = operatingAirlineCode;
+        this.airlineCode = airlineCode;
         this.operatingAirlineName = operatingAirlineName;
-        this.pricePerTraveler = pricePerTraveler;
-        this.segments = segments;
-        this.totalFlightDuration = totalFlightDuration;
+        this.operatingAirlineCode = operatingAirlineCode;
+        this.duration = duration;
         this.totalPrice = totalPrice;
+        this.hasStops = hasStops;
+        this.segments = segments;
+        this.travelerPricings = travelerPricings;
     }
 
     public FlightsDTO() {
     }
-    
-    
 
-    public String getDepartureTime() {
+    public String getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(String flightId) {
+        this.flightId = flightId;
+    }
+
+    public OffsetDateTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(OffsetDateTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public String getArrivalTime() {
+    public OffsetDateTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(String arrivalTime) {
+    public void setArrivalTime(OffsetDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
-    public String getDepartureAirport() {
-        return departureAirport;
+    public String getDepartureAirportName() {
+        return departureAirportName;
     }
 
-    public void setDepartureAirport(String departureAirport) {
-        this.departureAirport = departureAirport;
+    public void setDepartureAirportName(String departureAirportName) {
+        this.departureAirportName = departureAirportName;
     }
 
-    public String getArrivalAirport() {
-        return arrivalAirport;
+    public String getDepartureAirportCode() {
+        return departureAirportCode;
     }
 
-    public void setArrivalAirport(String arrivalAirport) {
-        this.arrivalAirport = arrivalAirport;
+    public void setDepartureAirportCode(String departureAirportCode) {
+        this.departureAirportCode = departureAirportCode;
     }
 
-    public String getAirlineCode() {
-        return airlineCode;
+    public String getArrivalAirportName() {
+        return arrivalAirportName;
     }
 
-    public void setAirlineCode(String airlineCode) {
-        this.airlineCode = airlineCode;
+    public void setArrivalAirportName(String arrivalAirportName) {
+        this.arrivalAirportName = arrivalAirportName;
+    }
+
+    public String getArrivalAirportCode() {
+        return arrivalAirportCode;
+    }
+
+    public void setArrivalAirportCode(String arrivalAirportCode) {
+        this.arrivalAirportCode = arrivalAirportCode;
     }
 
     public String getAirlineName() {
@@ -98,12 +116,12 @@ public class FlightsDTO {
         this.airlineName = airlineName;
     }
 
-    public String getOperatingAirlineCode() {
-        return operatingAirlineCode;
+    public String getAirlineCode() {
+        return airlineCode;
     }
 
-    public void setOperatingAirlineCode(String operatingAirlineCode) {
-        this.operatingAirlineCode = operatingAirlineCode;
+    public void setAirlineCode(String airlineCode) {
+        this.airlineCode = airlineCode;
     }
 
     public String getOperatingAirlineName() {
@@ -114,12 +132,36 @@ public class FlightsDTO {
         this.operatingAirlineName = operatingAirlineName;
     }
 
-    public String getPricePerTraveler() {
-        return pricePerTraveler;
+    public String getOperatingAirlineCode() {
+        return operatingAirlineCode;
     }
 
-    public void setPricePerTraveler(String pricePerTraveler) {
-        this.pricePerTraveler = pricePerTraveler;
+    public void setOperatingAirlineCode(String operatingAirlineCode) {
+        this.operatingAirlineCode = operatingAirlineCode;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public boolean isHasStops() {
+        return hasStops;
+    }
+
+    public void setHasStops(boolean hasStops) {
+        this.hasStops = hasStops;
     }
 
     public List<Segment> getSegments() {
@@ -130,20 +172,17 @@ public class FlightsDTO {
         this.segments = segments;
     }
 
-    public String getTotalFlightDuration() {
-        return totalFlightDuration;
+    public List<TravelerPricing> getTravelerPricings() {
+        return travelerPricings;
     }
 
-    public void setTotalFlightDuration(String totalFlightDuration) {
-        this.totalFlightDuration = totalFlightDuration;
+    public void setTravelerPricings(List<TravelerPricing> travelerPricings) {
+        this.travelerPricings = travelerPricings;
     }
 
-    public String getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(String totalPrice) {
-        this.totalPrice = totalPrice;
+    @Override
+    public String toString() {
+        return "FlightsDTO{" + "flightId=" + flightId + ", departureTime=" + departureTime + ", arrivalTime=" + arrivalTime + ", departureAirportName=" + departureAirportName + ", departureAirportCode=" + departureAirportCode + ", arrivalAirportName=" + arrivalAirportName + ", arrivalAirportCode=" + arrivalAirportCode + ", airlineName=" + airlineName + ", airlineCode=" + airlineCode + ", operatingAirlineName=" + operatingAirlineName + ", operatingAirlineCode=" + operatingAirlineCode + ", duration=" + duration + ", totalPrice=" + totalPrice + ", hasStops=" + hasStops + ", segments=" + segments + ", travelerPricings=" + travelerPricings + '}';
     }
 
 }

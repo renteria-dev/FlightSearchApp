@@ -4,46 +4,76 @@
  */
 package com.example.server.model;
 
+import com.example.server.mapper.SafeDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  *
  * @author luis.renteria
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Segment {
 
-    private Location departure;
-    private Location arrival;
+    public Segment() {
+    }
+
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private Arrival departure;
+
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private Arrival arrival;
     private String carrierCode;
     private String number;
-    private String aircraftCode;
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private String aircraft;
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private String operating;
     private String duration;
-    private String numberOfStops;
+    private String id;
+    private long numberOfStops;
 
-    private String operatingCarrierCode;
-
-    public Segment(Location departure, Location arrival, String carrierCode, String number, String aircraftCode, String duration, String numberOfStops, String operatingCarrierCode) {
+    public Segment(Arrival departure, Arrival arrival, String carrierCode, String number, String aircraft, String operating, String duration, String id, long numberOfStops) {
         this.departure = departure;
         this.arrival = arrival;
         this.carrierCode = carrierCode;
         this.number = number;
-        this.aircraftCode = aircraftCode;
+        this.aircraft = aircraft;
+        this.operating = operating;
         this.duration = duration;
+        this.id = id;
         this.numberOfStops = numberOfStops;
-        this.operatingCarrierCode = operatingCarrierCode;
     }
 
-    public Location getDeparture() {
+    @JsonSetter("aircraft")  // Se asignará a este setter cuando el campo "aircraft" esté presente en el JSON
+    public void setAircraft(JsonNode node) {
+        if (node != null && node.has("code")) {
+            this.aircraft = node.get("code").asText();  // Extraemos "code" dentro de "aircraft" y lo asignamos a aircraft
+        }
+    }
+
+    @JsonSetter("operating")  // Se asignará a este setter cuando el campo "aircraft" esté presente en el JSON
+    public void setOperating(JsonNode node) {
+        if (node != null && node.has("code")) {
+            this.aircraft = node.get("code").asText();  // Extraemos "code" dentro de "aircraft" y lo asignamos a aircraft
+        }
+    }
+
+    public Arrival getDeparture() {
         return departure;
     }
 
-    public void setDeparture(Location departure) {
+    public void setDeparture(Arrival departure) {
         this.departure = departure;
     }
 
-    public Location getArrival() {
+    public Arrival getArrival() {
         return arrival;
     }
 
-    public void setArrival(Location arrival) {
+    public void setArrival(Arrival arrival) {
         this.arrival = arrival;
     }
 
@@ -63,12 +93,20 @@ public class Segment {
         this.number = number;
     }
 
-    public String getAircraftCode() {
-        return aircraftCode;
+    public String getAircraft() {
+        return aircraft;
     }
 
-    public void setAircraftCode(String aircraftCode) {
-        this.aircraftCode = aircraftCode;
+    public void setAircraft(String aircraft) {
+        this.aircraft = aircraft;
+    }
+
+    public String getOperating() {
+        return operating;
+    }
+
+    public void setOperating(String operating) {
+        this.operating = operating;
     }
 
     public String getDuration() {
@@ -79,20 +117,25 @@ public class Segment {
         this.duration = duration;
     }
 
-    public String getNumberOfStops() {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public long getNumberOfStops() {
         return numberOfStops;
     }
 
-    public void setNumberOfStops(String numberOfStops) {
+    public void setNumberOfStops(long numberOfStops) {
         this.numberOfStops = numberOfStops;
     }
 
-    public String getOperatingCarrierCode() {
-        return operatingCarrierCode;
-    }
-
-    public void setOperatingCarrierCode(String operatingCarrierCode) {
-        this.operatingCarrierCode = operatingCarrierCode;
+    @Override
+    public String toString() {
+        return "Segment{" + "departure=" + departure + ", arrival=" + arrival + ", carrierCode=" + carrierCode + ", number=" + number + ", aircraft=" + aircraft + ", operating=" + operating + ", duration=" + duration + ", id=" + id + ", numberOfStops=" + numberOfStops + '}';
     }
 
 }

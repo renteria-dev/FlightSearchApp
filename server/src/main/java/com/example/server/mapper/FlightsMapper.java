@@ -8,110 +8,107 @@ package com.example.server.mapper;
  *
  * @author luis.renteria
  */
-import com.example.server.model.Dictionaries;
+import com.example.server.model.Fee;
+import com.example.server.model.Flight;
 import com.example.server.model.FlightsDTO;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.example.server.model.Itinerary;
+import com.example.server.model.Price;
+import com.example.server.model.Segment;
+import com.example.server.model.TravelerPricing;
+import com.example.server.model.TravelerPricingPrice;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FlightsMapper {
 
-    public static List<FlightsDTO> convert(JsonNode jsonData) {
+    public static List<FlightsDTO> transformFlightsToDTO(Flight[] flights) {
+        List<FlightsDTO> flightDTOs = new ArrayList<>();
 
-        long startTime = System.nanoTime();
-        List<FlightsDTO> flightDTOList = new ArrayList<>();
+        // Iterar sobre el arreglo de vuelos
+        for (Flight flight : flights) {
+            FlightsDTO flightDTO = new FlightsDTO();
 
-        JsonNode dataNode = jsonData.get("data");
-        Dictionaries dictMapper = DictionariesMapper.convert(jsonData);
+            // Información básica del vuelo
+            flightDTO.setFlightId(flight.getId());
 
-        
+            // Asumimos que todos los itinerarios son iguales, obtenemos la primera segmentación
+            Itinerary firstItinerary = flight.getItineraries()[0];
 
-        if (dataNode != null && dataNode.isArray()) {
+            // Para el primer segmento (salida)
+            Segment firstSegment = firstItinerary.getSegments()[0];
+            flightDTO.setDepartureTime(firstSegment.getDeparture().getAt());
 
-            // Iterar sobre los datos de vuelo en lugar de usar stream
-            for (JsonNode option : dataNode) {
-                FlightsDTO summary = new FlightsDTO();
+            // Para el último segmento (llegada)
+            Segment lastSegment = firstItinerary.getSegments()[firstItinerary.getSegments().length - 1];
+            flightDTO.setArrivalTime(lastSegment.getArrival().getAt());
 
-                // Agregar la información relevante de cada opción de vuelo
-                JsonNode itinerariesNode = option.get("itineraries");
-                if (itinerariesNode != null && itinerariesNode.isArray() && itinerariesNode.size() > 0) {
-                    // Obtener el primer y último segmento de los itinerarios
-                    JsonNode firstItinerary = itinerariesNode.get(0);
-                    JsonNode lastItinerary = itinerariesNode.get(itinerariesNode.size() - 1);
+            // Aeropuertos de salida y llegada
+            flightDTO.setDepartureAirportName(firstSegment.getDeparture().getIataCode());
+            flightDTO.setDepartureAirportCode(firstSegment.getDeparture().getIataCode());
+            flightDTO.setArrivalAirportName(lastSegment.getArrival().getIataCode());
+            flightDTO.setArrivalAirportCode(lastSegment.getArrival().getIataCode());
 
-                    JsonNode firstSegment = firstItinerary.get("segments").get(0); // Primer segmento
-                    JsonNode lastSegment = lastItinerary.get("segments").get(lastItinerary.get("segments").size() - 1); // Último segmento
-                    
-                    //summary.setSegments(firstItinerary.get("segments"));
+            // Aerolínea principal y operativa
+            flightDTO.setAirlineName(firstSegment.getCarrierCode()); // O la aerolínea de algún atributo que tengas
+            flightDTO.setAirlineCode(firstSegment.getCarrierCode());
 
-                    // Hora de salida y llegada (usamos el primer y último segmento para obtener esos datos)
-                    summary.setDepartureTime(firstSegment.get("departure").get("at").asText());
-                    summary.setArrivalTime(lastSegment.get("arrival").get("at").asText());
-
-                    // Aeropuertos de salida y llegada (usamos el primer y último segmento)
-                    summary.setDepartureAirport(firstSegment.get("departure").get("iataCode").asText());
-                    summary.setArrivalAirport(lastSegment.get("arrival").get("iataCode").asText());
-
-                    // Aerolínea principal
-                    summary.setAirlineCode(firstSegment.get("carrierCode").asText());
-                    summary.setAirlineName(getAirlineName(dictMapper, summary.getAirlineCode()));
-
-                    // Aerolínea operadora (si es diferente)
-                    JsonNode operatingCarrierNode = firstSegment.get("operating");
-                    if (operatingCarrierNode != null) {
-                        String operatingCarrierCode = operatingCarrierNode.get("carrierCode").asText();
-                        summary.setOperatingAirlineCode(operatingCarrierCode);
-                        summary.setOperatingAirlineName(getAirlineName(dictMapper, operatingCarrierCode));
-                    }
-
-                    // Duración total del vuelo (sumamos la duración de los segmentos)
-                    summary.setTotalFlightDuration(firstItinerary.get("duration").asText());
-
-                    // Precio
-                    JsonNode priceNode = option.get("price");
-                    if (priceNode != null) {
-                        summary.setTotalPrice(priceNode.get("total").asText());
-                    }
-
-                    JsonNode travelerPricingNode = option.get("travelerPricings");
-                    if (travelerPricingNode != null && travelerPricingNode.isArray() && travelerPricingNode.size() > 0) {
-                        // Acceder al primer elemento del array de precios de viajero
-                        JsonNode firstTravelerPricing = travelerPricingNode.get(0);
-
-                        // Obtener el total del precio por viajero (campo "grandTotal")
-                        if (firstTravelerPricing.has("price")) {
-                            JsonNode pricingNode = firstTravelerPricing.get("price");
-                            if (pricingNode.has("grandTotal")) {
-                                String pricePerTraveler = pricingNode.get("grandTotal").asText();
-                                summary.setPricePerTraveler(pricePerTraveler); // Asignar el valor a la propiedad del DTO
-                            }
-                        }
-                    }
-
-                    // Añadir el DTO de vuelo a la lista
-                    flightDTOList.add(summary);
-                }
+            // Si la aerolínea operativa es diferente, la incluimos
+            if (!firstSegment.getCarrierCode().equals(firstSegment.getOperating())) {
+                flightDTO.setOperatingAirlineName(firstSegment.getOperating()); // O alguna lógica para obtener el nombre
+                flightDTO.setOperatingAirlineCode(firstSegment.getOperating());
             }
+
+            // Duración del vuelo
+            flightDTO.setDuration(firstItinerary.getDuration());  // Asumiendo que la duración se encuentra aquí
+
+            // Precio total
+            flightDTO.setTotalPrice(flight.getPrice().getTotal());
+
+            // Indicar si tiene paradas (más de 1 segmento indica paradas)
+            flightDTO.setHasStops(firstItinerary.getSegments().length > 1);
+
+            // Establecer segmentos del vuelo
+            List<Segment> segments = new ArrayList<>();
+            for (Segment segment : firstItinerary.getSegments()) {
+                segments.add(segment);
+            }
+            flightDTO.setSegments(segments);
+
+            // Precios por viajero (si están presentes)
+            List<TravelerPricing> travelerPricingDTOs = new ArrayList<>();
+            for (TravelerPricing travelerPricing : flight.getTravelerPricings()) {
+                TravelerPricing travelerPricingDTO = new TravelerPricing();
+                travelerPricingDTO.setTravelerID(travelerPricing.getTravelerID());
+                travelerPricingDTO.setFareOption(travelerPricing.getFareOption());
+                travelerPricingDTO.setTravelerType(travelerPricing.getTravelerType());
+
+                // Mapear el precio del viajero
+                TravelerPricingPrice priceDTO = new TravelerPricingPrice();
+                priceDTO.setCurrency(travelerPricing.getPrice().getCurrency());
+                priceDTO.setTotal(travelerPricing.getPrice().getTotal());
+                priceDTO.setBase(travelerPricing.getPrice().getBase());
+
+//                // Establecer tarifas adicionales (si las hay)
+//                List<Fee> feeDTOs = new ArrayList<>();
+//                for (Fee fee : travelerPricing) {
+//                    Fee feeDTO = new Fee();
+//                    feeDTO.setAmount(fee.getAmount());
+//                    feeDTO.setFeeType(fee.getFeeType());
+//                    feeDTOs.add(feeDTO);
+//                }
+//                priceDTO.setFees(feeDTOs);
+                travelerPricingDTO.setPrice(priceDTO);
+
+                travelerPricingDTOs.add(travelerPricingDTO);
+            }
+
+            flightDTO.setTravelerPricings(travelerPricingDTOs);
+
+            // Agregar el DTO de vuelo a la lista
+            flightDTOs.add(flightDTO);
         }
 
-        long endTime = System.nanoTime();
-
-        // Calcular el tiempo transcurrido en milisegundos
-        long durationInMillis = (endTime - startTime) / 1000000;
-
-        // Imprimir el tiempo de respuesta
-        System.out.println("LocationsMapper time: " + durationInMillis + " ms");
-
-        return flightDTOList;
-    }
-
-    private static String getAirlineName(Dictionaries dct, String carrierCode) {
-        // Aquí se podría usar un diccionario de aerolíneas para obtener el nombre
-        return DictionariesMapper.getCarrierName(dct, carrierCode);
-    }
-
-    private static String getAircraftName(Dictionaries dct, String carrierCode) {
-        // Aquí se podría usar un diccionario de aerolíneas operadoras
-        return DictionariesMapper.getAircraftName(dct, carrierCode);
+        return flightDTOs;
     }
 }

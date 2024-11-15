@@ -4,18 +4,26 @@
  */
 package com.example.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  *
  * @author luis.renteria
  */
-class Fee {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Fee {
 
+    public Fee() {
+    }
     private String amount;
-    private String type;
 
-    public Fee(String amount, String type) {
+    @JsonProperty("type")
+    private String feeType;
+
+    public Fee(String amount, String feeType) {
         this.amount = amount;
-        this.type = type;
+        this.feeType = feeType;
     }
 
     public String getAmount() {
@@ -26,12 +34,17 @@ class Fee {
         this.amount = amount;
     }
 
-    public String getType() {
-        return type;
+    public String getFeeType() {
+        return feeType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFeeType(String feeType) {
+        this.feeType = feeType;
+    }
+
+    @Override
+    public String toString() {
+        return "Fee{" + "amount=" + amount + ", feeType=" + feeType + '}';
     }
 
 }

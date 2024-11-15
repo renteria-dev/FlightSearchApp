@@ -4,14 +4,21 @@
  */
 package com.example.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  *
  * @author luis.renteria
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Location {
+
+    public Location() {
+    }
 
     private String iataCode;
     private String name;
+
     private String cityName;
     private String countryName;
 
@@ -80,6 +87,11 @@ public class Location {
 
     public void setCountryName(String countryName) {
         this.countryName = countryName;
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" + "iataCode=" + iataCode + ", name=" + name + ", cityName=" + cityName + ", countryName=" + countryName + ", terminal=" + terminal + ", at=" + at + '}';
     }
 
 }

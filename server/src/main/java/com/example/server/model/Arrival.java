@@ -4,14 +4,28 @@
  */
 package com.example.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.time.OffsetDateTime;
+
 /**
  *
  * @author luis.renteria
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Arrival {
 
     private String iataCode;
-    private String at;  // Fecha y hora de llegada o salida
+    private String terminal;
+
+    public Arrival() {
+    }
+    private OffsetDateTime at;
+
+    public Arrival(String iataCode, String terminal, OffsetDateTime at) {
+        this.iataCode = iataCode;
+        this.terminal = terminal;
+        this.at = at;
+    }
 
     public String getIataCode() {
         return iataCode;
@@ -21,17 +35,25 @@ public class Arrival {
         this.iataCode = iataCode;
     }
 
-    public String getAt() {
+    public String getTerminal() {
+        return terminal;
+    }
+
+    public void setTerminal(String terminal) {
+        this.terminal = terminal;
+    }
+
+    public OffsetDateTime getAt() {
         return at;
     }
 
-    public void setAt(String at) {
+    public void setAt(OffsetDateTime at) {
         this.at = at;
     }
 
-    // Getters and Setters
-    public Arrival(String iataCode, String at) {
-        this.iataCode = iataCode;
-        this.at = at;
+    @Override
+    public String toString() {
+        return "Arrival{" + "iataCode=" + iataCode + ", terminal=" + terminal + ", at=" + at + '}';
     }
+
 }

@@ -42,21 +42,21 @@ public class AppController {
 
     @GetMapping("/flights")
     public List<FlightsDTO> getFlights(
-            @RequestParam String departureAitaCode, 
+            @RequestParam String departureAitaCode,
             @RequestParam String arrivalAitaCode,
-            @RequestParam String departureDate, 
-            @RequestParam String arrivalDate,  
+            @RequestParam String departureDate,
+            @RequestParam String arrivalDate,
             @RequestParam(required = false) String returnDate,
-            @RequestParam int numberAdults, 
-            @RequestParam String currencyCode, 
+            @RequestParam int numberAdults,
+            @RequestParam String currencyCode,
             @RequestParam Boolean nonStop,
             @RequestParam(required = false, defaultValue = "ASC") String sortByPrice,
             @RequestParam(required = false) String sortByDate
-            ) {
+    ) {
         return appService.getFlights(
-                departureAitaCode, 
+                departureAitaCode,
                 arrivalAitaCode,
-                departureDate, 
+                departureDate,
                 arrivalDate,
                 returnDate,
                 numberAdults,
@@ -64,7 +64,6 @@ public class AppController {
                 nonStop,
                 sortByPrice,
                 sortByDate
-                        
         );
     }
 }

@@ -82,7 +82,7 @@ public class DictionariesMapper {
         }
         return null;  // Si no se encuentra el carrier, puedes devolver null o un mensaje por defecto
     }
-    
+
     // Método estático para obtener el nombre del avión a partir del código
     public static String getAircraftName(Dictionaries dictionaries, String aircraftCode) {
         Map<String, String> aircraftsMap = dictionaries.getAircrafts();

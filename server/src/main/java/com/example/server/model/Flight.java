@@ -4,34 +4,33 @@
  */
 package com.example.server.model;
 
-import java.util.List;
+import com.example.server.mapper.SafeDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  *
  * @author luis.renteria
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Flight {
 
-    private List<Itinerary> itineraries;
+    public Flight() {
+    }
+
     private String id;
+    //@JsonDeserialize(using = SafeDeserializer.class)
     private Price price;
-    private Dictionaries dictionaries;
-    private List<TravelerPricing> travelerPricing;
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private Itinerary[] itineraries;
+    @JsonDeserialize(using = SafeDeserializer.class)
+    private TravelerPricing[] travelerPricings;
 
-    public Flight(List<Itinerary> itineraries, String id, Price price, Dictionaries dictionaries, List<TravelerPricing> travelerPricing) {
-        this.itineraries = itineraries;
+    public Flight(String id, Itinerary[] itineraries, Price price, TravelerPricing[] travelerPricings) {
         this.id = id;
-        this.price = price;
-        this.dictionaries = dictionaries;
-        this.travelerPricing = travelerPricing;
-    }
-
-    public List<Itinerary> getItineraries() {
-        return itineraries;
-    }
-
-    public void setItineraries(List<Itinerary> itineraries) {
         this.itineraries = itineraries;
+        this.price = price;
+        this.travelerPricings = travelerPricings;
     }
 
     public String getId() {
@@ -42,6 +41,14 @@ public class Flight {
         this.id = id;
     }
 
+    public Itinerary[] getItineraries() {
+        return itineraries;
+    }
+
+    public void setItineraries(Itinerary[] itineraries) {
+        this.itineraries = itineraries;
+    }
+
     public Price getPrice() {
         return price;
     }
@@ -50,20 +57,17 @@ public class Flight {
         this.price = price;
     }
 
-    public Dictionaries getDictionaries() {
-        return dictionaries;
+    public TravelerPricing[] getTravelerPricings() {
+        return travelerPricings;
     }
 
-    public void setDictionaries(Dictionaries dictionaries) {
-        this.dictionaries = dictionaries;
+    public void setTravelerPricings(TravelerPricing[] travelerPricings) {
+        this.travelerPricings = travelerPricings;
     }
 
-    public List<TravelerPricing> getTravelerPricing() {
-        return travelerPricing;
-    }
-
-    public void setTravelerPricing(List<TravelerPricing> travelerPricing) {
-        this.travelerPricing = travelerPricing;
+    @Override
+    public String toString() {
+        return "Flight{" + "id=" + id + ", price=" + price + ", itineraries=" + itineraries + ", travelerPricings=" + travelerPricings + '}';
     }
 
 }
