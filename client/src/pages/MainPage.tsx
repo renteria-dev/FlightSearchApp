@@ -1,5 +1,4 @@
 import { SnackbarProvider } from "notistack";
-import ResultsPage from "./ResultsPage";
 import SearchPage from "./SearchPage";
 
 const MainPage = () => {
@@ -7,7 +6,7 @@ const MainPage = () => {
     <>
       <SnackbarProvider>
         <SearchPage />
-        <ResultsPage/>
+        {/* <ResultsPage/> */}
       </SnackbarProvider>
     </>
   );
