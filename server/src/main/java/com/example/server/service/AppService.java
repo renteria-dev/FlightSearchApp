@@ -84,7 +84,7 @@ public class AppService {
         JsonNode dicts = jsonResponse.get("dictionaries");
         Dictionaries myDict = new Dictionaries();
 
-        if (!dicts.isNull() && !dicts.isEmpty()) {
+        if (dicts!= null && !dicts.isEmpty()) {
             myDict = DictionariesMapper.convert(dicts);
         }
 

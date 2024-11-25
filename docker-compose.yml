@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./server # Carpeta del back-end
+    # env_file:
+    #   - ./server/.env # Archivo .env para el back-end
+    ports:
+      - "9090:9090" # Mapea el puerto 9090 del contenedor a 9090 en el host
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./client # Carpeta del front-end
+    env_file:
+      - ./client/.env # Archivo .env para el front-end
+    ports:
+      - "8080:8080" # Mapea el puerto 8080 del contenedor a 8080 en el host
+    depends_on:
+      - backend # El front-end depende de que el back-end esté disponible
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

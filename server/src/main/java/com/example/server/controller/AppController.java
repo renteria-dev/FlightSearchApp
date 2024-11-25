@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @author luis.renteria
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 
 public class AppController {

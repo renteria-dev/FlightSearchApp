@@ -11,7 +11,6 @@ import com.example.server.model.Price;
 import com.example.server.model.Segment;
 import com.example.server.model.TravelerPricing;
 import com.example.server.model.TravelerPricingPrice;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -21,7 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class ServerApplication {
 
     public static void main(String[] args) {
-        Dotenv dotenv = Dotenv.configure().load();
+        // Dotenv dotenv = Dotenv.configure().load();
         SpringApplication.run(ServerApplication.class, args);
         System.out.println("Server is running");
         TreePrinter.printClassDetailsForClass(Amenity.class);

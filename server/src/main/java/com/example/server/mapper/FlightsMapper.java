@@ -48,34 +48,46 @@ public class FlightsMapper {
             flightDTO.setArrivalAirportCode(lastSegment.getArrival().getIataCode());
 
             // Setting Airlines (main and operating if is the case)
-            flightDTO.setAirlineName( DictionariesMapper.getCarrierName(myDict, firstSegment.getCarrierCode())); // O la aerolínea de algún atributo que tengas
+            flightDTO.setAirlineName(DictionariesMapper.getCarrierName(myDict, firstSegment.getCarrierCode())); // O la aerolínea de algún atributo que tengas
             flightDTO.setAirlineCode(firstSegment.getCarrierCode());
 
             if (!firstSegment.getCarrierCode().equals(firstSegment.getOperating())) {
-                flightDTO.setOperatingAirlineName( DictionariesMapper.getCarrierName(myDict, firstSegment.getOperating())); // O alguna lógica para obtener el nombre
+                flightDTO.setOperatingAirlineName(DictionariesMapper.getCarrierName(myDict, firstSegment.getOperating())); // O alguna lógica para obtener el nombre
                 flightDTO.setOperatingAirlineCode(firstSegment.getOperating());
             }
-            
-           
 
             // Duration
-            flightDTO.setDuration(firstItinerary.getDuration());  
+            flightDTO.setDuration(firstItinerary.getDuration());
 
             // total price
             flightDTO.setTotalPrice(flight.getPrice().getTotal());
+            
+            // Price details
+            flightDTO.setPrice(flight.getPrice());
+            
 
             // hasStops
             flightDTO.setHasStops(firstItinerary.getSegments().length > 1);
 
             // Setting segments
-            List<Segment> segments = new ArrayList<>();
-            for (Segment segment : firstItinerary.getSegments()) {
-                String aircraftName=DictionariesMapper.getAircraftName(myDict, segment.getAircraft());
-                // Setting aircraft name
-                segment.setAircraft(aircraftName);
-                segments.add(segment);
+            List<Itinerary> itineraries = new ArrayList<>();
+            for (Itinerary myItinerary : flight.getItineraries()) {
+
+                List<Segment> mySegments = new ArrayList<>();
+                for (Segment segment : myItinerary.getSegments()) {
+
+                    String aircraftName = DictionariesMapper.getAircraftName(myDict, segment.getAircraft());
+                    // Setting aircraft name
+                    segment.setAircraft(aircraftName);
+                    mySegments.add(segment);
+
+                }
+                myItinerary.setSegments( mySegments.toArray(new Segment[mySegments.size()]));
+                itineraries.add(myItinerary);
+
             }
-            flightDTO.setSegments(segments);
+
+            flightDTO.setItineraries(itineraries);
 
             // Prices per traveler
             List<TravelerPricing> travelerPricingDTOs = new ArrayList<>();
@@ -85,7 +97,6 @@ public class FlightsMapper {
                 travelerPricingDTO.setFareOption(travelerPricing.getFareOption());
                 travelerPricingDTO.setTravelerType(travelerPricing.getTravelerType());
 
-                
                 TravelerPricingPrice priceDTO = new TravelerPricingPrice();
                 priceDTO.setCurrency(travelerPricing.getPrice().getCurrency());
                 priceDTO.setTotal(travelerPricing.getPrice().getTotal());
@@ -100,15 +111,18 @@ public class FlightsMapper {
 //                    feeDTOs.add(feeDTO);
 //                }
 //                priceDTO.setFees(feeDTOs);
-
                 travelerPricingDTO.setPrice(priceDTO);
-                
+
                 travelerPricingDTO.setFareDetailsBySegment(travelerPricing.getFareDetailsBySegment());
 
                 travelerPricingDTOs.add(travelerPricingDTO);
             }
 
             flightDTO.setTravelerPricings(travelerPricingDTOs);
+            
+            if (!travelerPricingDTOs.isEmpty()){
+                flightDTO.setCurrency(travelerPricingDTOs.get(0).getPrice().getCurrency());
+            }
 
             // Agregar el DTO de vuelo a la lista
             flightDTOs.add(flightDTO);

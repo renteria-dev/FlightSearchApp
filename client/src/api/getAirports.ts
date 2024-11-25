@@ -1,14 +1,16 @@
 import axios from "axios";
 import { ResponseAirport } from "../interfaces/ResponseAirport";
-import { baseUrl } from "./config";
+import { baseUrl,port } from "./config";
 export const getAirports = async (keyword: string) => {
+  const apiUrlWithPort = `${baseUrl}:${port}`; 
+
   const url = "/api/v1/airports";
 
   let urlParams = new URLSearchParams();
   let response: ResponseAirport;
   try {
     urlParams.append("keyword", keyword);
-    const { data } = await axios.get(baseUrl + url, { params: urlParams });
+    const { data } = await axios.get(apiUrlWithPort + url, { params: urlParams });
     console.log(data);
     response = data;
     return response;
