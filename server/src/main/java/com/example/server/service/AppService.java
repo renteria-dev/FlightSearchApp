@@ -9,14 +9,15 @@ import com.example.server.api.AmadeusApiClient;
 import com.example.server.mapper.DictionariesMapper;
 import com.example.server.mapper.FlightsMapper;
 import com.example.server.mapper.LocationsMapper;
+import com.example.server.model.AirportsDTO;
 import com.example.server.model.Dictionaries;
 import com.example.server.model.Flight;
 import com.example.server.model.FlightsDTO;
-import com.example.server.model.Location;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,9 +40,7 @@ public class AppService {
         this.amadeusApiClient = amadeusApiClient;
     }
 
-    private static final Logger LOGGER = Logger.getLogger(AppService.class.getName());
-
-    public List<Location> getAirportCode(String subtype, String keyword) {
+    public AirportsDTO getAirportCode(String subtype, String keyword) {
 
         String accessToken = authenticationService.getAccessToken();
 
@@ -49,30 +48,49 @@ public class AppService {
 
         JsonNode response = amadeusApiClient.request(accessToken, url);
 
-        return LocationsMapper.convert(response);
+        AirportsDTO myAirports = new AirportsDTO();
+
+        myAirports.setLocations(LocationsMapper.convert(response));
+
+        return myAirports;
 
     }
 
-    public List<FlightsDTO> getFlights(String departureAitaCode, String arrivalAitaCode, String departureDate, String arrivalDate, String returnDate, int numberAdults, String currencyCode, Boolean nonStop, String sortByPrice, String sortByDate) {
+    public List<FlightsDTO> getFlights(String departureAitaCode, String arrivalAitaCode, String departureDate, String returnDate, int numberAdults, String currencyCode, Boolean nonStop, String sortByPrice, String sortByDate) {
 
         String accessToken = authenticationService.getAccessToken();
-        String url = amadeusApiClient.buildFlightSearchUrl(departureAitaCode, arrivalAitaCode, departureDate, arrivalDate, returnDate, numberAdults, currencyCode, nonStop, sortByPrice, sortByDate);
-        JsonNode jsonResponse = amadeusApiClient.request(accessToken, url);
+        String url = amadeusApiClient.buildFlightSearchUrl(departureAitaCode, arrivalAitaCode, departureDate, returnDate, numberAdults, currencyCode, nonStop, sortByPrice, sortByDate);
+        JsonNode jsonResponse = null;
 
-        
-        
+        try {
+            jsonResponse = amadeusApiClient.request(accessToken, url);
+        } catch (Exception e) {
+            Logger.getLogger(AppService.class.getName()).log(Level.SEVERE, "Error al obtener o procesar la respuesta del API", e);
+            List<FlightsDTO> myFDTO = new ArrayList<>();
+
+            return myFDTO;
+        }
+
+//        Si AmadeusAPI esta caido usaremos un json. Solo Pruebas
+//        if (jsonResponse==null) {
+//
+//            try {
+//                jsonResponse = Handle500.loadJsonFromFile("static/StaticResponse.json");
+//            } catch (IOException ex) {
+//                Logger.getLogger(AppService.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//
+//        }
         JsonNode dicts = jsonResponse.get("dictionaries");
         Dictionaries myDict = new Dictionaries();
-        
+
         if (!dicts.isNull() && !dicts.isEmpty()) {
-            myDict=DictionariesMapper.convert(dicts);
+            myDict = DictionariesMapper.convert(dicts);
         }
-        
-        // Crear un ObjectMapper
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new Jdk8Module());
         String node = jsonResponse.get("data").toString();
-        
 
         if (!node.isEmpty()) {
             try {
@@ -81,14 +99,16 @@ public class AppService {
                     System.out.println(f.toString());
                 }
 
-                return FlightsMapper.transformFlightsToDTO(myFlights,myDict);
+                return FlightsMapper.transformFlightsToDTO(myFlights, myDict);
 
             } catch (JsonProcessingException ex) {
                 Logger.getLogger(AppService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        List<FlightsDTO> myFDTO = new ArrayList<>();
+        myFDTO.add(new FlightsDTO());
 
-        return null;
+        return myFDTO;
 
     }
 

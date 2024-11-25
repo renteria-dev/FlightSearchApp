@@ -4,8 +4,8 @@
  */
 package com.example.server.controller;
 
+import com.example.server.model.AirportsDTO;
 import com.example.server.model.FlightsDTO;
-import com.example.server.model.Location;
 import com.example.server.service.AppService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +33,9 @@ public class AppController {
         return "Server Running";
     }
 
-    @GetMapping("/airport")
-    public List<Location> getAirportCode(
-            @RequestParam(defaultValue = "CITY,AIRPORT") String subtype,
+    @GetMapping("/airports")
+    public AirportsDTO getAirportCode(
+            @RequestParam(defaultValue = "AIRPORT") String subtype,
             @RequestParam String keyword) {
         return appService.getAirportCode(subtype, keyword);
     }
@@ -45,7 +45,6 @@ public class AppController {
             @RequestParam String departureAitaCode,
             @RequestParam String arrivalAitaCode,
             @RequestParam String departureDate,
-            @RequestParam String arrivalDate,
             @RequestParam(required = false) String returnDate,
             @RequestParam int numberAdults,
             @RequestParam String currencyCode,
@@ -57,7 +56,6 @@ public class AppController {
                 departureAitaCode,
                 arrivalAitaCode,
                 departureDate,
-                arrivalDate,
                 returnDate,
                 numberAdults,
                 currencyCode,

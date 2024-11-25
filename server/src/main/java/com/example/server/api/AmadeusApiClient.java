@@ -74,7 +74,7 @@ public class AmadeusApiClient {
         }
     }
 
-    public String buildFlightSearchUrl(String departureAitaCode, String arrivalAitaCode, String departureDate, String arrivalDate, String returnDate, int numberAdults, String currencyCode, Boolean nonStop, String sortByPrice, String sortByDate) {
+    public String buildFlightSearchUrl(String departureAitaCode, String arrivalAitaCode, String departureDate, String returnDate, int numberAdults, String currencyCode, Boolean nonStop, String sortByPrice, String sortByDate) {
         return UriComponentsBuilder.fromHttpUrl(amadeusUrl)
                 .path("/v2/shopping/flight-offers")
                 .queryParam("originLocationCode", departureAitaCode)

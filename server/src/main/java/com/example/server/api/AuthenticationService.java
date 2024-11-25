@@ -51,7 +51,7 @@ public class AuthenticationService {
             // Create request entity with the data and headers
             HttpEntity<String> entity = new HttpEntity<>(authData, headers);
 
-            long startTime = System.nanoTime();
+//            long startTime = System.nanoTime();
 
             // Send the POST request
             ResponseEntity<JsonNode> response = restTemplate.exchange(
@@ -61,13 +61,13 @@ public class AuthenticationService {
                     JsonNode.class
             );
 
-            long endTime = System.nanoTime();
-
-            // Calculate elapsed time in milliseconds
-            long durationInMillis = (endTime - startTime) / 1000000;
-
-            // Print out the response time
-            System.out.println("Response time: " + durationInMillis + " ms");
+//            long endTime = System.nanoTime();
+//
+//            // Calculate elapsed time in milliseconds
+//            long durationInMillis = (endTime - startTime) / 1000000;
+//
+//            // Print out the response time
+//            System.out.println("Response time: " + durationInMillis + " ms");
 
             // Check for a successful response
             if (response.getStatusCode() == HttpStatus.OK) {
@@ -77,7 +77,7 @@ public class AuthenticationService {
 
                     System.out.println("Access token updated: " + accessToken);
                 } else {
-                    System.err.println("Failed to retrieve access token.");
+                    System.err.println("Failed get access token.");
                 }
             } else {
                 System.err.println("Failed to get access token. Status code: " + response.getStatusCode());
