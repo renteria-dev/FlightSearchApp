@@ -52,14 +52,17 @@ public RestTemplate getRestTemplate() throws NoSuchAlgorithmException, KeyManage
     // Define trust managers to accept all certificates
     TrustManager[] trustManagers = new TrustManager[]{new X509TrustManager() {
         // Method to check client's trust - accepting all certificates
+        @Override
         public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
         }
 
         // Method to check server's trust - accepting all certificates
+        @Override
         public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
         }
 
         // Method to get accepted issuers - returning an empty array
+        @Override
         public X509Certificate[] getAcceptedIssuers() {
             return new X509Certificate[0];
         }
@@ -87,8 +90,9 @@ public RestTemplate getRestTemplate() throws NoSuchAlgorithmException, KeyManage
 
     @Autowired
     public AuthenticationService(RestTemplateBuilder restTemplateBuilder) throws NoSuchAlgorithmException, KeyManagementException {
-        this.restTemplate = getRestTemplate();//restTemplateBuilder.build();
-    }
+        this.restTemplate = getRestTemplate();//restTemplateBuilder.build(); 
+    }// en este sustituî el template por el getRestTemmplate de la funcion que le anadi
+
 
     @Scheduled(fixedRate = 20 * 60 * 1000)
     public void updateAccessToken() {
