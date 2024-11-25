@@ -41,17 +41,17 @@ public class Segment {
         this.numberOfStops = numberOfStops;
     }
 
-    @JsonSetter("aircraft")  // Se asignará a este setter cuando el campo "aircraft" esté presente en el JSON
+    @JsonSetter("aircraft") 
     public void setAircraft(JsonNode node) {
         if (node != null && node.has("code")) {
-            this.aircraft = node.get("code").asText();  // Extraemos "code" dentro de "aircraft" y lo asignamos a aircraft
+            this.aircraft = node.get("code").asText();  
         }
     }
 
-    @JsonSetter("operating")  // Se asignará a este setter cuando el campo "aircraft" esté presente en el JSON
+    @JsonSetter("operating")  
     public void setOperating(JsonNode node) {
         if (node != null && node.has("carrierCode")) {
-            this.operating = node.get("carrierCode").asText();  // Extraemos "code" dentro de "aircraft" y lo asignamos a aircraft
+            this.operating = node.get("carrierCode").asText(); 
         }
     }
 

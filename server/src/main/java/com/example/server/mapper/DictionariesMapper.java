@@ -21,11 +21,10 @@ public class DictionariesMapper {
     public static Dictionaries convert(JsonNode jsonData) {
         Dictionaries dictionaries = new Dictionaries();
 
-        // Extraer el nodo "dictionaries" del JSON
         JsonNode dictionariesNode = jsonData;
 
         if (dictionariesNode != null) {
-            // Procesar el mapa de "locations"
+            // Process locations
             JsonNode locationsNode = dictionariesNode.get("locations");
             if (locationsNode != null) {
                 Map<String, Location> locationsMap = new HashMap<>();
@@ -42,7 +41,7 @@ public class DictionariesMapper {
                 dictionaries.setLocations(locationsMap);
             }
 
-            // Procesar el mapa de "aircrafts"
+            // Process aircraft
             JsonNode aircraftsNode = dictionariesNode.get("aircraft");
             if (aircraftsNode != null) {
                 Map<String, String> aircraftsMap = new HashMap<>();
@@ -56,7 +55,7 @@ public class DictionariesMapper {
                 dictionaries.setAircrafts(aircraftsMap);
             }
 
-            // Procesar el mapa de "carriers"
+            // Process carriers
             JsonNode carriersNode = dictionariesNode.get("carriers");
             if (carriersNode != null) {
                 Map<String, String> carriersMap = new HashMap<>();
@@ -74,21 +73,19 @@ public class DictionariesMapper {
         return dictionaries;
     }
 
-    // Método para consultar un carrier por código
     public static String getCarrierName(Dictionaries dictionaries, String carrierCode) {
         Map<String, String> carriersMap = dictionaries.getCarriers();
         if (carriersMap != null && carriersMap.containsKey(carrierCode)) {
             return carriersMap.get(carrierCode);
         }
-        return null;  // Si no se encuentra el carrier, puedes devolver null o un mensaje por defecto
+        return null;
     }
 
-    // Método estático para obtener el nombre del avión a partir del código
     public static String getAircraftName(Dictionaries dictionaries, String aircraftCode) {
         Map<String, String> aircraftsMap = dictionaries.getAircrafts();
         if (aircraftsMap != null && aircraftsMap.containsKey(aircraftCode)) {
             return aircraftsMap.get(aircraftCode);
         }
-        return null;  // Si no se encuentra el avión, puedes devolver null o un mensaje por defecto
+        return null;
     }
 }

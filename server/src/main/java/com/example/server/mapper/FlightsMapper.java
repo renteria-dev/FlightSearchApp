@@ -24,35 +24,33 @@ public class FlightsMapper {
     public static List<FlightsDTO> transformFlightsToDTO(Flight[] flights, Dictionaries myDict) {
         List<FlightsDTO> flightDTOs = new ArrayList<>();
 
-        // Iterar sobre el arreglo de vuelos
         for (Flight flight : flights) {
             FlightsDTO flightDTO = new FlightsDTO();
 
-            // Información básica del vuelo
+            // Id
             flightDTO.setFlightId(flight.getId());
 
-            // Asumimos que todos los itinerarios son iguales, obtenemos la primera segmentación
+            // Unique itinerary (TODO: check)
             Itinerary firstItinerary = flight.getItineraries()[0];
 
-            // Para el primer segmento (salida)
+            // Setting departure with first segment
             Segment firstSegment = firstItinerary.getSegments()[0];
             flightDTO.setDepartureTime(firstSegment.getDeparture().getAt());
 
-            // Para el último segmento (llegada)
+            // Setting arrival with last segment
             Segment lastSegment = firstItinerary.getSegments()[firstItinerary.getSegments().length - 1];
             flightDTO.setArrivalTime(lastSegment.getArrival().getAt());
 
-            // Aeropuertos de salida y llegada
+            // Setting Airports
             flightDTO.setDepartureAirportName(firstSegment.getDeparture().getIataCode());
             flightDTO.setDepartureAirportCode(firstSegment.getDeparture().getIataCode());
             flightDTO.setArrivalAirportName(lastSegment.getArrival().getIataCode());
             flightDTO.setArrivalAirportCode(lastSegment.getArrival().getIataCode());
 
-            // Aerolínea principal y operativa
+            // Setting Airlines (main and operating if is the case)
             flightDTO.setAirlineName( DictionariesMapper.getCarrierName(myDict, firstSegment.getCarrierCode())); // O la aerolínea de algún atributo que tengas
             flightDTO.setAirlineCode(firstSegment.getCarrierCode());
 
-            // Si la aerolínea operativa es diferente, la incluimos
             if (!firstSegment.getCarrierCode().equals(firstSegment.getOperating())) {
                 flightDTO.setOperatingAirlineName( DictionariesMapper.getCarrierName(myDict, firstSegment.getOperating())); // O alguna lógica para obtener el nombre
                 flightDTO.setOperatingAirlineCode(firstSegment.getOperating());
@@ -60,25 +58,26 @@ public class FlightsMapper {
             
            
 
-            // Duración del vuelo
-            flightDTO.setDuration(firstItinerary.getDuration());  // Asumiendo que la duración se encuentra aquí
+            // Duration
+            flightDTO.setDuration(firstItinerary.getDuration());  
 
-            // Precio total
+            // total price
             flightDTO.setTotalPrice(flight.getPrice().getTotal());
 
-            // Indicar si tiene paradas (más de 1 segmento indica paradas)
+            // hasStops
             flightDTO.setHasStops(firstItinerary.getSegments().length > 1);
 
-            // Establecer segmentos del vuelo
+            // Setting segments
             List<Segment> segments = new ArrayList<>();
             for (Segment segment : firstItinerary.getSegments()) {
                 String aircraftName=DictionariesMapper.getAircraftName(myDict, segment.getAircraft());
+                // Setting aircraft name
                 segment.setAircraft(aircraftName);
                 segments.add(segment);
             }
             flightDTO.setSegments(segments);
 
-            // Precios por viajero (si están presentes)
+            // Prices per traveler
             List<TravelerPricing> travelerPricingDTOs = new ArrayList<>();
             for (TravelerPricing travelerPricing : flight.getTravelerPricings()) {
                 TravelerPricing travelerPricingDTO = new TravelerPricing();
@@ -86,13 +85,13 @@ public class FlightsMapper {
                 travelerPricingDTO.setFareOption(travelerPricing.getFareOption());
                 travelerPricingDTO.setTravelerType(travelerPricing.getTravelerType());
 
-                // Mapear el precio del viajero
+                
                 TravelerPricingPrice priceDTO = new TravelerPricingPrice();
                 priceDTO.setCurrency(travelerPricing.getPrice().getCurrency());
                 priceDTO.setTotal(travelerPricing.getPrice().getTotal());
                 priceDTO.setBase(travelerPricing.getPrice().getBase());
 
-//                // Establecer tarifas adicionales (si las hay)
+//                //  tarifas adicionales (si las hay)
 //                List<Fee> feeDTOs = new ArrayList<>();
 //                for (Fee fee : travelerPricing) {
 //                    Fee feeDTO = new Fee();
@@ -101,6 +100,7 @@ public class FlightsMapper {
 //                    feeDTOs.add(feeDTO);
 //                }
 //                priceDTO.setFees(feeDTOs);
+
                 travelerPricingDTO.setPrice(priceDTO);
                 
                 travelerPricingDTO.setFareDetailsBySegment(travelerPricing.getFareDetailsBySegment());

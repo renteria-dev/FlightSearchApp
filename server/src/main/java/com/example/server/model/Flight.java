@@ -4,9 +4,7 @@
  */
 package com.example.server.model;
 
-import com.example.server.mapper.SafeDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  *

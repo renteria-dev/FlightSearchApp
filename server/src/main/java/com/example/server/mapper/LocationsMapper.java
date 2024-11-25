@@ -16,7 +16,7 @@ import java.util.*;
 public class LocationsMapper {
 
     public static List<Location> convert(JsonNode jsonData) {
-        long startTime = System.nanoTime();
+
         List<Location> locations = new ArrayList<>();
         Map<String, Location> locationMap = new HashMap<>();
 
@@ -28,14 +28,14 @@ public class LocationsMapper {
                 String cityName = node.path("address").path("cityName").asText();
                 String countryName = node.path("address").path("countryName").asText();
                 String type = node.path("type").asText();
-                String subType = node.path("subType").asText();
-
-                if (locationMap.containsKey(iataCode)) {
-
-                    if ("CITY".equals(subType) && !locationMap.get(iataCode).getCityName().equals(cityName)) {
-                        continue;
-                    }
-                }
+                
+//                String subType = node.path("subType").asText();
+//                if (locationMap.containsKey(iataCode)) {
+//
+//                    if ("CITY".equals(subType) && !locationMap.get(iataCode).getCityName().equals(cityName)) {
+//                        continue;
+//                    }
+//                }
 
                 if ("AIRPORT".equals(type) || !locationMap.containsKey(iataCode)) {
                     Location location = new Location(iataCode, name, cityName, countryName);
@@ -46,13 +46,6 @@ public class LocationsMapper {
 
         locations.addAll(locationMap.values());
 
-        long endTime = System.nanoTime();
-
-        // Calculate elapsed time in milliseconds
-        long durationInMillis = (endTime - startTime) / 1000000;
-
-        // Print out the response time
-        System.out.println("LocationsMapper time: " + durationInMillis + " ms");
         return locations;
     }
 
