@@ -29,7 +29,13 @@ import { useSnackbar } from "notistack";
 import { validateInputs } from "../utils/validation";
 import ResultsPage from "./ResultsPage";
 
+
+import { useData } from "../hooks/useData";
+
 const SearchPage = () => {
+
+const {response,setResponse} =  useData();
+
   const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState<ResponseFlights[] | null>();
 
@@ -100,9 +106,11 @@ const SearchPage = () => {
 
       try {
         setData(null);
+        setResponse([])
         setLoadingButton(true);
         await fetchFlights(requestPayload).then((response) => {
           setData(response);
+          setResponse(response)
           setLoadingButton(false);
         });
       } catch (error) {
@@ -299,7 +307,7 @@ const SearchPage = () => {
         </Box>
       </Box>
 
-      {data !== null && data !== undefined && <ResultsPage data={data} />}
+      
     </>
   );
 };

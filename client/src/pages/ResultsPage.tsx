@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { ResponseFlights } from "../interfaces/ResponseFlights";
 import {
   Box,
@@ -18,13 +18,17 @@ import {
 import FlightSummary from "../components/FlightSummary";
 import dayjs from "dayjs";
 import { grey } from "@mui/material/colors";
+import { useData } from "../hooks/useData";
 
 interface ResultsPageProps {
   data?: ResponseFlights[];
 }
 
 const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
-  const [response, setResponse] = useState<ResponseFlights[]>([]);
+
+  const {response,setResponse} = useData();
+
+  // const [response, setResponse] = useState<ResponseFlights[]>([]);
   const [sortedFlights, setSortedFlights] = useState<ResponseFlights[]>([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(3);
@@ -37,16 +41,17 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
   useEffect(() => {
     if (data) {
       setResponse(data);
-    } else {
-      axios
-        .get("example.json")
-        .then((response) => {
-          setResponse(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching flights:", error);
-        });
-    }
+    } 
+    // else {
+    //   axios
+    //     .get("example.json")
+    //     .then((response) => {
+    //       setResponse(response.data);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error fetching flights:", error);
+    //     });
+    // }
   }, [data]);
 
   // Get flight duration in minutes using dayjs
@@ -119,7 +124,8 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
     }
   }, [response, sortBy, durationSortOrder, priceSortOrder]);
 
-  return (
+  
+  return response!=null && (
     <>
       <Box sx={{ padding: 3 }}>
         <Typography variant="h4" gutterBottom>
@@ -171,7 +177,7 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
             <FlightSummary key={flight.flightId} flight={flight} />
           ))}
 
-        {data?.length == 0 && (
+        {response?.length == 0 && (
           <Paper
             elevation={3}
             sx={{

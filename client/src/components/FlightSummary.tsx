@@ -14,12 +14,14 @@ import dayjs from "dayjs";
 import { FlightLand, FlightTakeoff } from "@mui/icons-material";
 import { green } from "@mui/material/colors";
 import { getLayoverTime, parseISO8601Duration } from "../utils/dates";
+import { useData } from "../hooks/useData";
 interface FlightSummaryProps {
   flight: ResponseFlights;
 }
 
 const FlightSummary: React.FC<FlightSummaryProps> = ({ flight }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const { setMyFlight } = useData();
 
   return (
     <Paper
@@ -198,7 +200,10 @@ const FlightSummary: React.FC<FlightSummaryProps> = ({ flight }) => {
               <Button
                 variant="contained"
                 size="small"
-                onClick={() => setShowDetails(!showDetails)}
+                onClick={() => {
+                  setShowDetails(!showDetails);
+                  setMyFlight(flight);
+                }}
               >
                 {showDetails ? "Hide Details" : "Show Details"}
               </Button>
@@ -208,14 +213,13 @@ const FlightSummary: React.FC<FlightSummaryProps> = ({ flight }) => {
       </Box>
 
       {/* Mostrar detalles del vuelo si el usuario lo solicita */}
-      {showDetails && (
+      {/* {showDetails && (
         <>
-          {/* Divider */}
           <Divider sx={{ my: 2 }} />
 
           <FlightDetails flight={flight} />
         </>
-      )}
+      )} */}
     </Paper>
   );
 };
