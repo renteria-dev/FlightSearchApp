@@ -3,12 +3,14 @@ import {
   alpha,
   Box,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   MenuItem,
   Select,
   TextField,
   Typography,
+  Divider,
 } from "@mui/material";
 import { lightBlue } from "@mui/material/colors";
 import { LoadingButton } from "@mui/lab";
@@ -31,7 +33,7 @@ const SearchPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState<ResponseFlights[] | null>();
 
-  const currencies = ["MXN", "USD", "EUR"];
+  const currencies = ["USD", "MXN", "EUR"];
 
   const [departureAirport, setDepartureAirport] = useState<Airport | null>(
     null
@@ -44,6 +46,8 @@ const SearchPage = () => {
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const [numberAdults, setNumberAdults] = useState<number>(1);
   const [nonStop, setNonStop] = useState<boolean>(false);
+
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   const fetchAirports = async (query: string): Promise<Airport[]> => {
     try {
@@ -63,7 +67,7 @@ const SearchPage = () => {
       return data;
     } catch (error) {
       console.error("Error fetching flights:", error);
-      throw new Error("Failed to fetch flights"); 
+      throw new Error("Failed to fetch flights");
     }
   };
 
@@ -95,8 +99,14 @@ const SearchPage = () => {
       };
 
       try {
-        await fetchFlights(requestPayload).then((response)=>{setData(response)});
+        setData(null);
+        setLoadingButton(true);
+        await fetchFlights(requestPayload).then((response) => {
+          setData(response);
+          setLoadingButton(false);
+        });
       } catch (error) {
+        setLoadingButton(false);
         enqueueSnackbar("Error Ocurred", { variant: "error" });
       }
     }
@@ -124,6 +134,10 @@ const SearchPage = () => {
             gap: 3,
           }}
         >
+          <Typography variant="h4"  fontWeight={800} letterSpacing={2} >
+            FLIGTH SEARCH APP
+          </Typography>
+          <Divider variant="fullWidth" orientation="horizontal" />
           <Box
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
           >
@@ -143,7 +157,6 @@ const SearchPage = () => {
               dbTime={500}
             />
           </Box>
-          {/* {departureAirport ? departureAirport.iataCode : ""} */}
 
           <Box
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
@@ -164,7 +177,6 @@ const SearchPage = () => {
               dbTime={500}
             />
           </Box>
-          {/* {arrivalAirport ? arrivalAirport.iataCode : ""} */}
 
           <Box
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
@@ -181,6 +193,7 @@ const SearchPage = () => {
                 value={departureDate}
                 onChange={(newDate) => setDepartureDate(newDate)}
                 minDate={dayjs()}
+                sx={{ flex: 1 }}
               />
             </LocalizationProvider>
           </Box>
@@ -275,9 +288,9 @@ const SearchPage = () => {
 
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <LoadingButton
-              loading={false}
-              loadingIndicator="Loading…"
-              variant="outlined"
+              loading={loadingButton}
+              loadingIndicator={<CircularProgress size={24} />}
+              variant="contained"
               onClick={handleSearch}
             >
               Search
@@ -286,7 +299,7 @@ const SearchPage = () => {
         </Box>
       </Box>
 
-      {data!==null &&  data!==undefined && <ResultsPage data={data} />}
+      {data !== null && data !== undefined && <ResultsPage data={data} />}
     </>
   );
 };

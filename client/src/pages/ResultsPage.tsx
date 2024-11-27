@@ -12,9 +12,12 @@ import {
   Grid,
   Pagination,
   SelectChangeEvent,
+  Paper,
+  alpha,
 } from "@mui/material";
 import FlightSummary from "../components/FlightSummary";
 import dayjs from "dayjs";
+import { grey } from "@mui/material/colors";
 
 interface ResultsPageProps {
   data?: ResponseFlights[];
@@ -36,15 +39,15 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
       setResponse(data);
     } else {
       axios
-        .get('example.json')
+        .get("example.json")
         .then((response) => {
           setResponse(response.data);
         })
         .catch((error) => {
-          console.error('Error fetching flights:', error);
+          console.error("Error fetching flights:", error);
         });
     }
-  }, [data]); 
+  }, [data]);
 
   // Get flight duration in minutes using dayjs
   const getFlightDuration = (flight: ResponseFlights): number => {
@@ -147,9 +150,9 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth>
-            <InputLabel id="label">Priority</InputLabel>
+              <InputLabel id="label">Priority</InputLabel>
               <Select
-              label="Priority"
+                label="Priority"
                 size="small"
                 value={sortBy}
                 onChange={handlePriorityChange}
@@ -168,6 +171,25 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
             <FlightSummary key={flight.flightId} flight={flight} />
           ))}
 
+        {data?.length == 0 && (
+          <Paper
+            elevation={3}
+            sx={{
+              padding: 3,
+              marginBottom: 2,
+              minWidth: "800px",
+              backgroundColor: alpha(grey[300], 0.3),
+            }}
+          >
+            <Typography variant="h5" color="initial">
+              No Flights Available
+            </Typography>
+            <Typography variant="h6" color="initial">
+              Try other
+            </Typography>
+          </Paper>
+        )}
+
         {/* Pagination */}
         <Pagination
           count={Math.ceil(sortedFlights.length / rowsPerPage)}
@@ -178,8 +200,6 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
           sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
         />
       </Box>
-
-      
     </>
   );
 };
