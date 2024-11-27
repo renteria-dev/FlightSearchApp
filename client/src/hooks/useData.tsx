@@ -6,8 +6,8 @@ type DataContextProviderProps = {
 };
 
 type DataContextType = {
-  response: ResponseFlights[];
-  setResponse: (response: ResponseFlights[]) => void;
+  response: ResponseFlights[] | undefined;
+  setResponse: (response: ResponseFlights[] | undefined) => void;
   myflight: ResponseFlights | null;
   setMyFlight: (myflight: ResponseFlights) => void;
 };
@@ -20,7 +20,7 @@ export const useData = () => {
 };
 
 export const DataContextProvider = ({ children }: DataContextProviderProps) => {
-  const [response, setResponse] = useState<ResponseFlights[]>([]);
+  const [response, setResponse] = useState<ResponseFlights[] | undefined>();
   const [myflight, setMyFlight] = useState<ResponseFlights | null>(null);
   return (
     <DataContext.Provider

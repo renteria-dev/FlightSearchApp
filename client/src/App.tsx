@@ -8,6 +8,7 @@ import MainPage from "./pages/MainPage";
 import "./App.css";
 import { Button, CssBaseline } from "@mui/material";
 import { InvertColors } from "@mui/icons-material";
+import { DataContextProvider } from "./hooks/useData";
 function MyApp() {
   const { mode, setMode } = useColorScheme();
 
@@ -50,7 +51,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
+      <DataContextProvider>
         <MyApp />
+        </DataContextProvider>
       </CssBaseline>
     </ThemeProvider>
   );

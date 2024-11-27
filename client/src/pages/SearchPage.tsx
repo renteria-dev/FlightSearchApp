@@ -27,17 +27,17 @@ import { getFlights } from "../api/getFlights";
 import { RequestFlights } from "../interfaces/RequestFlights";
 import { useSnackbar } from "notistack";
 import { validateInputs } from "../utils/validation";
-import ResultsPage from "./ResultsPage";
 
 
 import { useData } from "../hooks/useData";
+import { useNavigate } from "react-router-dom";
 
 const SearchPage = () => {
-
-const {response,setResponse} =  useData();
+  const { setResponse } = useData();
+  const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const [data, setData] = useState<ResponseFlights[] | null>();
+  // const [ data, setData] = useState<ResponseFlights[] | null>();
 
   const currencies = ["USD", "MXN", "EUR"];
 
@@ -105,13 +105,17 @@ const {response,setResponse} =  useData();
       };
 
       try {
-        setData(null);
-        setResponse([])
+        // setData(null);
+        setResponse(undefined);
         setLoadingButton(true);
         await fetchFlights(requestPayload).then((response) => {
-          setData(response);
-          setResponse(response)
+          // setData(response);
+          setResponse(response);
           setLoadingButton(false);
+
+          setTimeout(() => {
+            navigate("/resultsPage");
+          }, 1000);
         });
       } catch (error) {
         setLoadingButton(false);
@@ -127,7 +131,6 @@ const {response,setResponse} =  useData();
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          minHeight: "100vh",
         }}
       >
         <Box
@@ -142,7 +145,7 @@ const {response,setResponse} =  useData();
             gap: 3,
           }}
         >
-          <Typography variant="h4"  fontWeight={800} letterSpacing={2} >
+          <Typography variant="h4" fontWeight={800} letterSpacing={2}>
             FLIGTH SEARCH APP
           </Typography>
           <Divider variant="fullWidth" orientation="horizontal" />
@@ -209,12 +212,20 @@ const {response,setResponse} =  useData();
           <Box
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
           >
-            <Typography
-              variant="subtitle1"
-              sx={{ width: "200px", textAlign: "right", marginRight: 2 }}
-            >
-              Return Date
-            </Typography>
+            <Box>
+              <Typography
+                variant="subtitle1"
+                sx={{ width: "200px", textAlign: "right", marginRight: 2 }}
+              >
+                Return Date
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                sx={{ width: "200px", textAlign: "right", marginRight: 2 }}
+              >
+                (Optional)
+              </Typography>
+            </Box>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Return Date"
@@ -235,12 +246,13 @@ const {response,setResponse} =  useData();
           >
             <Typography
               variant="subtitle1"
-              sx={{ width: "200px", textAlign: "right", marginRight: 2 }}
+              sx={{ width: "300px", textAlign: "right", marginRight: 2 }}
             >
               Currency
             </Typography>
-            <FormControl>
+            <FormControl fullWidth>
               <Select
+                size="small"
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
               >
@@ -251,18 +263,16 @@ const {response,setResponse} =  useData();
                 ))}
               </Select>
             </FormControl>
-          </Box>
 
-          <Box
-            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-          >
             <Typography
               variant="subtitle1"
-              sx={{ width: "200px", textAlign: "right", marginRight: 2 }}
+              sx={{ width: "300px", textAlign: "right", marginRight: 2 }}
             >
               Adults:
             </Typography>
             <TextField
+              fullWidth
+              size="small"
               type="number"
               value={numberAdults}
               onChange={(e) => {
@@ -273,16 +283,13 @@ const {response,setResponse} =  useData();
               }}
               variant="outlined"
             />
-          </Box>
 
-          <Box
-            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-          >
             <Typography
               variant="subtitle1"
-              sx={{ width: "200px", textAlign: "right", marginRight: 2 }}
+              sx={{ width: "30px", textAlign: "right", marginRight: 1 }}
             ></Typography>
             <FormControlLabel
+              sx={{ width: "500px" }}
               label="Non-stop"
               control={
                 <Checkbox
@@ -306,8 +313,6 @@ const {response,setResponse} =  useData();
           </Box>
         </Box>
       </Box>
-
-      
     </>
   );
 };

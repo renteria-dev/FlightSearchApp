@@ -19,14 +19,15 @@ import FlightSummary from "../components/FlightSummary";
 import dayjs from "dayjs";
 import { grey } from "@mui/material/colors";
 import { useData } from "../hooks/useData";
+import { useNavigate } from "react-router-dom";
 
 interface ResultsPageProps {
   data?: ResponseFlights[];
 }
 
 const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
-
-  const {response,setResponse} = useData();
+  const { response, setResponse } = useData();
+  const navigate = useNavigate();
 
   // const [response, setResponse] = useState<ResponseFlights[]>([]);
   const [sortedFlights, setSortedFlights] = useState<ResponseFlights[]>([]);
@@ -41,7 +42,7 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
   useEffect(() => {
     if (data) {
       setResponse(data);
-    } 
+    }
     // else {
     //   axios
     //     .get("example.json")
@@ -124,89 +125,106 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ data }) => {
     }
   }, [response, sortBy, durationSortOrder, priceSortOrder]);
 
-  
-  return response!=null && (
-    <>
-      <Box sx={{ padding: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Available Flights
-        </Typography>
-
-        {/* Sorting and Priority Selection */}
-        <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-          <Grid item xs={12} sm={4}>
-            <Button
-              variant="outlined"
-              onClick={toggleDurationSortOrder}
-              endIcon={durationSortOrder === "asc" ? "ASC" : "DESC"}
-              fullWidth
-            >
-              Sort by Duration
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Button
-              variant="outlined"
-              onClick={togglePriceSortOrder}
-              endIcon={priceSortOrder === "asc" ? "ASC" : "DESC"}
-              fullWidth
-            >
-              Sort by Price
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth>
-              <InputLabel id="label">Priority</InputLabel>
-              <Select
-                label="Priority"
-                size="small"
-                value={sortBy}
-                onChange={handlePriorityChange}
-              >
-                <MenuItem value="duration">Duration</MenuItem>
-                <MenuItem value="price">Price</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-
-        {/* Display Flights */}
-        {sortedFlights
-          .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-          .map((flight) => (
-            <FlightSummary key={flight.flightId} flight={flight} />
-          ))}
-
-        {response?.length == 0 && (
-          <Paper
-            elevation={3}
-            sx={{
-              padding: 3,
-              marginBottom: 2,
-              minWidth: "800px",
-              backgroundColor: alpha(grey[300], 0.3),
-            }}
-          >
-            <Typography variant="h5" color="initial">
-              No Flights Available
-            </Typography>
-            <Typography variant="h6" color="initial">
-              Try other
-            </Typography>
-          </Paper>
-        )}
-
-        {/* Pagination */}
-        <Pagination
-          count={Math.ceil(sortedFlights.length / rowsPerPage)}
-          page={page}
-          onChange={(_e, value) => {
-            setPage(value);
+  return (
+    response != null && (
+      <>
+        <Button
+          variant="contained"
+          onClick={() => {
+            navigate("/");
           }}
-          sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
-        />
-      </Box>
-    </>
+          sx={{
+            position: "fixed", // Fix the button position on the screen
+            top: "20px", // 20px from the bottom of the screen
+            left: "20px", // 20px from the right side of the screen
+            zIndex: 1000, // Ensure the button is on top of other elements
+            padding: "10px 20px", // Adjust padding for better appearance
+          }}
+        >
+          Back to Search
+        </Button>
+
+        <Box sx={{ padding: 3 }}>
+          <Typography variant="h4" gutterBottom>
+            Available Flights
+          </Typography>
+
+          {/* Sorting and Priority Selection */}
+          <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+            <Grid item xs={12} sm={4}>
+              <Button
+                variant="outlined"
+                onClick={toggleDurationSortOrder}
+                endIcon={durationSortOrder === "asc" ? "ASC" : "DESC"}
+                fullWidth
+              >
+                Sort by Duration
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Button
+                variant="outlined"
+                onClick={togglePriceSortOrder}
+                endIcon={priceSortOrder === "asc" ? "ASC" : "DESC"}
+                fullWidth
+              >
+                Sort by Price
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel id="label">Priority</InputLabel>
+                <Select
+                  label="Priority"
+                  size="small"
+                  value={sortBy}
+                  onChange={handlePriorityChange}
+                >
+                  <MenuItem value="duration">Duration</MenuItem>
+                  <MenuItem value="price">Price</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          {/* Display Flights */}
+          {sortedFlights
+            .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+            .map((flight) => (
+              <FlightSummary key={flight.flightId} flight={flight} />
+            ))}
+
+          {response?.length == 0 && (
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 3,
+                marginBottom: 2,
+                minWidth: "800px",
+                backgroundColor: alpha(grey[300], 0.3),
+              }}
+            >
+              <Typography variant="h5" color="initial">
+                No Flights Available
+              </Typography>
+              <Typography variant="h6" color="initial">
+                Try other
+              </Typography>
+            </Paper>
+          )}
+
+          {/* Pagination */}
+          <Pagination
+            count={Math.ceil(sortedFlights.length / rowsPerPage)}
+            page={page}
+            onChange={(_e, value) => {
+              setPage(value);
+            }}
+            sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
+          />
+        </Box>
+      </>
+    )
   );
 };
 

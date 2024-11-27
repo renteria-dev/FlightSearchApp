@@ -1,20 +1,36 @@
 import { SnackbarProvider } from "notistack";
 import SearchPage from "./SearchPage";
-import { DataContextProvider } from "../hooks/useData";
+import { useData } from "../hooks/useData";
 import ResultsPage from "./ResultsPage";
 import DetailsPage from "./DetailsPage";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 const MainPage = () => {
+  const { response, myflight } = useData();
   return (
-    <>
-      <DataContextProvider>
-        <SnackbarProvider>
-          <SearchPage />
-        </SnackbarProvider>
-        <ResultsPage />
-        <DetailsPage />
-      </DataContextProvider>
-    </>
+    <Router>
+      <SnackbarProvider>
+        <Routes>
+          <Route path="/" element={<SearchPage />} />
+          <Route
+            path="/resultsPage"
+            element={response ? <ResultsPage /> : <Navigate to="/" />}
+          />
+
+          <Route
+            path="/resultsPage/details"
+            element={
+              myflight ? <DetailsPage /> : <Navigate to="/resultsPage" />
+            }
+          />
+        </Routes>
+      </SnackbarProvider>
+    </Router>
   );
 };
 
