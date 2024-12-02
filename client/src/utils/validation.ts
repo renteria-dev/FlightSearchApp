@@ -15,7 +15,7 @@ export const validationSchema = object().shape({
     .min(1, "The number of adults must be at least 1.")
     .max(9, "The number of adults must be at lees than 10.")
     .required("The number of adults is required."),
-  departureDate: date().required("The departure date is required.").nullable(),
+  departureDate: date().required("The departure date is required."),
   returnDate: date().nullable(),
   selectedCurrency: string()
     .oneOf(["MXN", "EUR", "USD"], "The currency code must be MXN, USD, or EUR.")
