@@ -11,7 +11,7 @@ interface FlightSegmentProps {
 
 const FlightSegment: React.FC<FlightSegmentProps> = ({ segment, index }) => {
   return (
-    <Paper sx={{ padding: 2 , backgroundColor: alpha(grey["300"],0.3) }}>
+    <Paper sx={{ padding: 2, backgroundColor: alpha(grey["300"], 0.3) }}>
       <Grid container spacing={2}>
         <Grid item>
           <Typography variant="subtitle1">Segment {index + 1}</Typography>

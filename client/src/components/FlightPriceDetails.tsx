@@ -28,13 +28,15 @@ const FlightPriceDetails: React.FC<FlightPriceDetailsProps> = ({ flight }) => {
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Base Price: {price.base}
+              Base Price: ${Number(price.base).toLocaleString()}{" "}
+              {price.currency}
             </Typography>
             <Typography
               variant="h5"
               sx={{ fontWeight: "bold", color: green["A700"] }}
             >
-              Total Price: {price.total}
+              Total Price: ${Number(price.total).toLocaleString()}{" "}
+              {price.currency}
             </Typography>
             <Typography variant="body1">Fees: </Typography>
 
@@ -101,7 +103,9 @@ const FlightPriceDetails: React.FC<FlightPriceDetailsProps> = ({ flight }) => {
             )}
 
             <Typography variant="h6" sx={{ marginTop: 2 }}>
-              Price per Traveler: {flight.travelerPricings[0]?.price.total}
+              Price per Traveler:{" "}
+              {Number(flight.travelerPricings[0]?.price.total).toLocaleString()}{" "}
+              {flight.travelerPricings[0]?.price.currency}
             </Typography>
           </Grid>
         </Grid>

@@ -16,11 +16,10 @@ interface FlightDetailsProps {
 }
 
 const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
-  
   const renderSegments = (itineraryIndex: number) => {
     // segments of actual itierary
     const itinerary = flight.itineraries[itineraryIndex];
-    
+
     return itinerary.segments.map((segment: Segment, segmentIndex: number) => (
       <Grid container spacing={2} key={segment.id} mb={4}>
         <Grid item xs={12} sm={4} sx={{ display: "flex" }}>
@@ -36,40 +35,44 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
             }}
           >
             <Typography variant="h6">Travelers Fare Details</Typography>
-            {flight.travelerPricings.slice(0, 1).map((traveler: TravelerPricing) => {
-              // filter details of traveler by segmentid
-              const fareDetails = traveler.fareDetailsBySegment.filter(
-                (detail: FareDetailsBySegment) =>
-                  detail.segmentId === segment.id
-              );
+            {flight.travelerPricings
+              .slice(0, 1)
+              .map((traveler: TravelerPricing) => {
+                // filter details of traveler by segmentid
+                const fareDetails = traveler.fareDetailsBySegment.filter(
+                  (detail: FareDetailsBySegment) =>
+                    detail.segmentId === segment.id
+                );
 
-              return fareDetails.length > 0 ? (
-                <Box key={traveler.travelerId} sx={{ marginBottom: 2 }}>
-                  <Typography variant="body1">
-                    Fare Option: {traveler.fareOption}
-                  </Typography>
-                  <Typography variant="body1">
-                    Traveler Type: {traveler.travelerType}
-                  </Typography>
-                  {fareDetails.map((detail) => (
-                    <Box key={detail.segmentId} sx={{ marginTop: 1 }}>
-                      <Typography variant="body2">
-                        Cabin: {detail.cabin}
-                      </Typography>
-                      <Typography variant="body2">
-                        Class: {detail.class}
-                      </Typography>
-                      <Typography variant="body2">
-                        Price: {traveler.price.currency} {traveler.price.total}
-                      </Typography>
-                      {detail.amenities && detail.amenities.length > 0 && (
-                        <AmenitiesTable amenities={detail.amenities} />
-                      )}
-                    </Box>
-                  ))}
-                </Box>
-              ) : null;
-            })}
+                return fareDetails.length > 0 ? (
+                  <Box key={traveler.travelerId} sx={{ marginBottom: 2 }}>
+                    <Typography variant="body1">
+                      Fare Option: {traveler.fareOption}
+                    </Typography>
+                    <Typography variant="body1">
+                      Traveler Type: {traveler.travelerType}
+                    </Typography>
+                    {fareDetails.map((detail) => (
+                      <Box key={detail.segmentId} sx={{ marginTop: 1 }}>
+                        <Typography variant="body2">
+                          Cabin: {detail.cabin}
+                        </Typography>
+                        <Typography variant="body2">
+                          Class: {detail.class}
+                        </Typography>
+                        <Typography variant="body2">
+                          Price: $
+                          {Number(traveler.price.total).toLocaleString()}{" "}
+                          {traveler.price.currency}
+                        </Typography>
+                        {detail.amenities && detail.amenities.length > 0 && (
+                          <AmenitiesTable amenities={detail.amenities} />
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+                ) : null;
+              })}
           </Box>
         </Grid>
       </Grid>
@@ -77,7 +80,7 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
   };
 
   return (
-    <Box sx={{ marginTop: 2}}>
+    <Box sx={{ marginTop: 2 }}>
       <Typography variant="h6">Flight Details</Typography>
       {/* Recorrer todos los itinerarios */}
       {flight.itineraries.map((_itinerary, itineraryIndex) => (
